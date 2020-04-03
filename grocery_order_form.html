@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>PCCTaboe Grocery Order Form</title>
+
+<style id="jsbin-css">
+body {
+  font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#grocery_form {
+  max-width: 700px;
+  margin: auto;
+}
+
+#grocery_form table {
+  width: 100%;
+}
+
+#grocery_form .category,
+#grocery_form label {
+  font-weight: 400;
+  font-size: 1.2em;
+}
+
+#grocery_form label {
+  display: block;
+}
+
+#grocery_form label.error {
+  color: red;
+}
+
+#grocery_form input,
+#grocery_form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0 4px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  color: #000;
+  font-family: sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+
+#grocery_form textarea {
+  min-height: 100px;
+}
+
+#grocery_form button {
+  display: block;
+  border: 2px solid #253551;
+  margin: auto;
+  transition: 0.1s background-color linear, 0.1s color linear;
+  padding: 1.3rem 2.7rem;
+  cursor: pointer;
+}
+
+#grocery_form button:hover {
+  background: #253551;
+  color: #fff;
+}
+
+#message {
+  display: none;
+  margin: 1.5em auto;
+  padding: 1em;
+  width: 80%;
+  border: 2px solid #253551;
+  text-align: center;
+}
+
+#grocery_form label + p {
+  margin: .1em;
+  font-size: .8em;
+}
+</style>
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+
+ <form id="grocery_form" method="post" action="https://script.google.com/macros/s/AKfycbxugrgi5Wzi0nxNTr2DJkky8ahXHC_PVEdUnwWYf9V-fnk-RtFi/exec">
+   <div>
+     <label for="cname">Name *</label>
+     <input id="cname" name="name" type="text" placeholder="Full Name" required>
+   </div>
+
+   <div>
+     <label for="cphone">Phone *</label>
+     <input id="cphone" name="phone" type="text" placeholder="(###) ### ####" required>
+   </div>
+
+   <div>
+     <label for="cemail">Email *</label>
+     <input id="cemail" name="email" class="email" type="email" required>
+   </div>
+
+   <div>
+     <label for="cdeliverymethod">Delivery Method</label>
+     <select id="cdeliverymethod" name="deliverymethod">
+       <option>Delivery</option>
+       <option>Pick-up</option>
+     </select>
+   </div>
+
+   <div id="address">
+     <label for="cdeliveryaddress">Address</label>
+     <p>This is where we'll deliver.</p>
+     <textarea id="cdeliveryaddress" name="deliveryaddress"></textarea>
+   </div>
+
+   <div>
+     <label for="ccomments">Comments</label>
+     <p>Anything else? </p>
+     <textarea id="ccomments" name="comments"></textarea>
+   </div>
+
+   <div id="message"></div>
+
+   <button id="sendit" type="submit">SEND IT!</button>
+
+ </form>
+<script>
+var categories = JSON.parse('[{"name":"Dairy","items":[{"name":"American Cheese - sliced","id":100,"category":"Dairy","price":4.94,"per":"1 lb"},{"name":"Blue Cheese","id":101,"category":"Dairy","price":3.75,"per":"5 oz"},{"name":"Butter - Salted","id":102,"category":"Dairy","price":4,"per":"1 lb"},{"name":"Burrata","id":103,"category":"Dairy","price":8,"per":"8 oz"},{"name":"Cheddar - block","id":104,"category":"Dairy","price":3.52,"per":"1 lb"},{"name":"Cheddar - sliced","id":105,"category":"Dairy","price":3.84,"per":"1 lb"},{"name":"Cotija - block","id":106,"category":"Dairy","price":5,"per":"10oz"},{"name":"Cottage Cheese","id":107,"category":"Dairy","price":2.4,"per":"16 oz"},{"name":"Cream Cheese","id":108,"category":"Dairy","price":5,"per":"8 oz"},{"name":"Eggs","id":109,"category":"Dairy","price":2.5,"per":"dozen"},{"name":"Feta","id":110,"category":"Dairy","price":4.5,"per":"6 oz"},{"name":"Half & Half","id":111,"category":"Dairy","price":3,"per":"each"},{"name":"Milk","id":112,"category":"Dairy","price":4,"per":"1 gallon"},{"name":"Mozzarella","id":113,"category":"Dairy","price":4.8,"per":"1 lb"},{"name":"Parmesan","id":114,"category":"Dairy","price":5.2,"per":"8 oz"},{"name":"Pepper Jack - Block","id":115,"category":"Dairy","price":7.2,"per":"1 lb"},{"name":"Sour Cream","id":116,"category":"Dairy","price":2.56,"per":"16oz"},{"name":"String Cheese","id":117,"category":"Dairy","price":5.4,"per":"12 pack"},{"name":"Yogurt - Greek Vanilla","id":118,"category":"Dairy","price":5.12,"per":"32 oz"}]},{"name":"Meat","items":[{"name":"Bacon","id":119,"category":"Meat","price":8.99,"per":"20oz"},{"name":"Burger Patties","id":120,"category":"Meat","price":6.75,"per":"5"},{"name":"Chicken Breast","id":121,"category":"Meat","price":7.5,"per":"4 x 6oz"},{"name":"Chicken Legs","id":122,"category":"Meat","price":0.99,"per":"lbs"},{"name":"Chicken Thigh","id":123,"category":"Meat","price":6.95,"per":"2.5lbs"},{"name":"Chorizo","id":124,"category":"Meat","price":2,"per":"lbs"},{"name":"Cod","id":125,"category":"Meat","price":4.8,"per":"lbs"},{"name":"Corn Dogs","id":126,"category":"Meat","price":2.5,"per":"6 ea"},{"name":"Filet","id":127,"category":"Meat","price":8,"per":"8 oz cut"},{"name":"Ground Beef","id":128,"category":"Meat","price":7,"per":"2lbs"},{"name":"Hot Dogs","id":129,"category":"Meat","price":1.75,"per":"8 ea"},{"name":"Italian Hot Sausage","id":130,"category":"Meat","price":5,"per":"5 ea"},{"name":"Pork Butt","id":131,"category":"Meat","price":3,"per":"lbs"},{"name":"Pork Chops","id":132,"category":"Meat","price":4.5,"per":"lbs"},{"name":"Pork Ribs","id":133,"category":"Meat","price":3.5,"per":"lbs"},{"name":"Ribeye","id":134,"category":"Meat","price":11.25,"per":"12oz cut"},{"name":"Salmon Filet","id":135,"category":"Meat","price":7.5,"per":"5-7oz"},{"name":"Sausage Links - Breakfast","id":136,"category":"Meat","price":4,"per":"8 ea"},{"name":"Shrimp","id":137,"category":"Meat","price":6.99,"per":"lbs"},{"name":"Tri Tip","id":138,"category":"Meat","price":24.95,"per":"2-2.5 lbs"},{"name":"Tuna","id":139,"category":"Meat","price":1,"per":"5 oz"},{"name":"Turkey - Sliced Lunch Meat","id":140,"category":"Meat","price":6,"per":"12 oz"}]},{"name":"Frozen","items":[{"name":"Bagels - Plain","id":141,"category":"Frozen","price":3,"per":"6 ea"},{"name":"Beef & Bean Green Chile Burritos","id":142,"category":"Frozen","price":3.5,"per":"8 ea"},{"name":"Chicken Strips","id":143,"category":"Frozen","price":4.75,"per":"lbs"},{"name":"Egg Rolls","id":144,"category":"Frozen","price":7,"per":"8 ea"},{"name":"Fettuccini Alfredo","id":145,"category":"Frozen","price":12.99,"per":"each"},{"name":"French Fries","id":146,"category":"Frozen","price":4.8,"per":"32 oz"},{"name":"Frozen Vegetable Medley","id":147,"category":"Frozen","price":4.8,"per":"1 lb bag"},{"name":"Lemon Drop Cheese Cake","id":148,"category":"Frozen","price":45,"per":"each"},{"name":"Pizza Bites","id":149,"category":"Frozen","price":14.85,"per":"45 oz"},{"name":"Pizza Sticks","id":150,"category":"Frozen","price":8,"per":"8 ea"},{"name":"Ravioli - 5 Cheese with Tomato Bachamel","id":151,"category":"Frozen","price":12.99,"per":"each"},{"name":"Ravioli - Wild Mushroom w/ Porcini Sauce","id":152,"category":"Frozen","price":12.99,"per":"each"},{"name":"Ravioli - Butternut w/ Tomato Sage Sauce","id":153,"category":"Frozen","price":12.99,"per":"each"},{"name":"Tomato Basil Soup","id":154,"category":"Frozen","price":12.5,"per":"2qt"},{"name":"Waffles","id":155,"category":"Frozen","price":3,"per":"6 ea"}]},{"name":"Canned & Dry","items":[{"name":"Cholula 2 oz","id":156,"category":"Canned & Dry","price":1,"per":"2 oz"},{"name":"Coffee","id":157,"category":"Canned & Dry","price":9.6,"per":"32 oz ground"},{"name":"Decaf Coffee","id":158,"category":"Canned & Dry","price":9.6,"per":"32 oz ground"},{"name":"Diced Tomatoes","id":159,"category":"Canned & Dry","price":1.5,"per":"#N/A"},{"name":"Flour - All Pourpose","id":160,"category":"Canned & Dry","price":12.8,"per":"1 lb"},{"name":"Flour - Bread","id":161,"category":"Canned & Dry","price":4,"per":"4 lbs"},{"name":"Mayonaise","id":162,"category":"Canned & Dry","price":5.5,"per":"32 fl oz"},{"name":"Mustard","id":163,"category":"Canned & Dry","price":3.6,"per":"24 fl oz"},{"name":"Ketchup","id":164,"category":"Canned & Dry","price":4.8,"per":"24 fl oz"},{"name":"Paper Towels","id":165,"category":"Canned & Dry","price":1.5,"per":"ea"},{"name":"Pinto Beans","id":166,"category":"Canned & Dry","price":2.56,"per":"32 oz"},{"name":"Refried Beans","id":167,"category":"Canned & Dry","price":2.56,"per":"32 oz"},{"name":"Spaghetti Sauce","id":168,"category":"Canned & Dry","price":5.25,"per":"32 oz"},{"name":"Sriracha","id":169,"category":"Canned & Dry","price":4,"per":"28 oz bottle"},{"name":"Sugar - Light Brown","id":170,"category":"Canned & Dry","price":2.5,"per":"each box"},{"name":"Sugar - White","id":171,"category":"Canned & Dry","price":4.8,"per":"5 lbs"},{"name":"Tobasco","id":172,"category":"Canned & Dry","price":2,"per":"2oz"},{"name":"Toilet Paper","id":173,"category":"Canned & Dry","price":1,"per":"roll (max 6)"},{"name":"Trash Bags","id":174,"category":"Canned & Dry","price":16,"per":"40"},{"name":"Vinegar - Red Wine","id":175,"category":"Canned & Dry","price":3,"per":"12 fl oz"},{"name":"Vinegar - White Wine","id":176,"category":"Canned & Dry","price":2.76,"per":"12 fl oz"},{"name":"Vinegar - Sherry","id":177,"category":"Canned & Dry","price":2,"per":"8 fl oz"}]},{"name":"Produce","items":[{"name":"Apples","id":178,"category":"Produce","price":2.25,"per":"lbs"},{"name":"Avocado","id":179,"category":"Produce","price":1.5,"per":"ea"},{"name":"Bell Peppers - Green","id":180,"category":"Produce","price":1.5,"per":"ea"},{"name":"Bell Peppers - Red","id":181,"category":"Produce","price":1.5,"per":"ea"},{"name":"Broccoli","id":182,"category":"Produce","price":2.8,"per":"head"},{"name":"Cabbage","id":183,"category":"Produce","price":1.5,"per":"head"},{"name":"Carrots","id":184,"category":"Produce","price":1.5,"per":"lbs"},{"name":"Cauliflower","id":185,"category":"Produce","price":2.5,"per":"head"},{"name":"Celery","id":186,"category":"Produce","price":2.3,"per":"bunch"},{"name":"Cucumber - English","id":187,"category":"Produce","price":2,"per":"ea"},{"name":"Grapes - Green","id":188,"category":"Produce","price":5,"per":"lbs"},{"name":"Grapes - Red","id":189,"category":"Produce","price":5,"per":"lbs"},{"name":"Habanero","id":190,"category":"Produce","price":5,"per":"lbs"},{"name":"Herbs - Basil","id":191,"category":"Produce","price":2.75,"per":"bunch"},{"name":"Herbs - Cilantro","id":192,"category":"Produce","price":1,"per":"bunch"},{"name":"Herbs - Dill","id":193,"category":"Produce","price":2.5,"per":"bunch"},{"name":"Herbs - Parsley","id":194,"category":"Produce","price":1,"per":"bunch"},{"name":"Herbs - Rosemary","id":195,"category":"Produce","price":2.5,"per":"bunch"},{"name":"Herbs - Tarragon","id":196,"category":"Produce","price":2.5,"per":"bunch"},{"name":"Herbs - Thyme","id":197,"category":"Produce","price":2.5,"per":"bunch"},{"name":"Fresh Grapefruit Juice","id":198,"category":"Produce","price":10,"per":"qt"},{"name":"Fresh Orange Juice","id":199,"category":"Produce","price":10,"per":"qt"},{"name":"Fresh Pineapple Juice","id":200,"category":"Produce","price":12,"per":"qt"},{"name":"Garlic","id":201,"category":"Produce","price":1.45,"per":"quarter lbs"},{"name":"Ginger","id":202,"category":"Produce","price":4,"per":"lbs"},{"name":"Grapefruit","id":203,"category":"Produce","price":2,"per":"ea"},{"name":"Hash Browns","id":204,"category":"Produce","price":2.5,"per":"20 oz"},{"name":"Jalapenos","id":205,"category":"Produce","price":2.5,"per":"lbs"},{"name":"Lemons","id":206,"category":"Produce","price":1,"per":"3 pack"},{"name":"Lettuce - Green Leaf","id":207,"category":"Produce","price":2.25,"per":"ea"},{"name":"Lettuce - Iceberg","id":208,"category":"Produce","price":1,"per":"ea"},{"name":"Lettuce - Romaine","id":209,"category":"Produce","price":1.15,"per":"ea"},{"name":"Limes","id":210,"category":"Produce","price":1,"per":"3 pack"},{"name":"Mushrooms - Cremini","id":211,"category":"Produce","price":3.6,"per":"8 oz pack"},{"name":"Onion - Red","id":212,"category":"Produce","price":2,"per":"lbs"},{"name":"Onion - White","id":213,"category":"Produce","price":2,"per":"lbs"},{"name":"Oranges","id":214,"category":"Produce","price":1,"per":"lbs"},{"name":"Pineapple","id":215,"category":"Produce","price":4,"per":"ea"},{"name":"Potato - Idaho","id":216,"category":"Produce","price":1,"per":"lbs"},{"name":"Potato - Red","id":217,"category":"Produce","price":1,"per":"lbs"},{"name":"Potato - Sweet","id":218,"category":"Produce","price":2.25,"per":"lbs"},{"name":"Serrano","id":219,"category":"Produce","price":3.25,"per":"lbs"},{"name":"Tomatoes","id":220,"category":"Produce","price":2.25,"per":"lbs"},{"name":"Ulf\'s Famous \\"Ugly Little F***er\\"","id":221,"category":"Produce","price":10,"per":"8 oz"}]},{"name":"Cleaning Supplies","items":[{"name":"All Purpose Cleaner","id":222,"category":"Cleaning Supplies","price":9,"per":"each"},{"name":"Bleach","id":223,"category":"Cleaning Supplies","price":9,"per":"each"},{"name":"Glass Cleaner","id":224,"category":"Cleaning Supplies","price":9,"per":"each"},{"name":"Gloves","id":225,"category":"Cleaning Supplies","price":8,"per":"box"},{"name":"Hand Soap","id":226,"category":"Cleaning Supplies","price":5,"per":"200ml"}]}]');
+
+var $quantity = $('<select>');
+for (var i=0; i<=10; i++) {
+  $quantity.append($('<option>').text(i));
+}
+
+var $products = $('<table>');
+
+for (var i=0; i<categories.length; i++) {
+  $products.append($('<tr class="category">').append($('<td colspan=3>').text(categories[i].name)));
+
+  var items = categories[i].items;
+
+  for (var j=0; j<items.length; j++) {
+    var $itemq = $quantity.clone().attr('name', 'product-' + items[j].id);
+    $('<tr>')
+      .append($('<td>').append($itemq))
+      .append($('<td>').text(items[j].name))
+      .append($('<td>').text('$' + items[j].price.toFixed(2) + ' / ' + items[j].per))
+      .appendTo($products);
+  }
+
+
+  $('form').prepend($products);
+}
+
+$('#cdeliverymethod').change(function(evt) {
+  $('#address').toggle($(evt.target).val() == 'Delivery');
+});
+
+$('#grocery_form').validate({
+  submitHandler: function(form) {
+    var $form = $('#grocery_form'),
+        $btn = $('#sendit'),
+        $msg = $('#message');
+
+    console.log($form.serialize());
+    $btn.prop('disabled', true);
+
+    $.post($form.attr('action'), $form.serialize())
+      .done(function(data) {
+        if (data['result'] == 'success') {
+          $msg.text('Thanks! We got your order!');
+        } else if (data['result'] == 'error') {
+          $msg.text('Sorry. Something went wrong: ' + data['errors'].join(', '));
+        }
+      })
+      .fail(function(data) {
+        $msg.text('Sorry. Something went wrong. Try again? Or call us?')
+      })
+      .always(function(data) {
+        $btn.prop('disabled', false);
+        $msg.show();
+        window.setTimeout(function() {$msg.hide();}, 10000);
+      });
+  }
+});
+</script>
+</body>
+</html>
